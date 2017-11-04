@@ -686,6 +686,13 @@ TEST_F(MathGradTest, BatchMatMulComplexGrad_TransposeX_TransposeY) {
   TestMatMulGrad<complex64>(true, true, true);
 }
 
+TEST_F(MathGradTest, FloorGrad_Should_Do_nothing){
+  TensorShape x_shape({2, 3, 7, 5});
+  auto x = Placeholder(scope_, DT_FLOAT, Placeholder::Shape(x_shape));
+  auto y = FloorGrad(scope_, x_shape);
+  RunTest(x, x_shape, y, x_shape);
+}
+
 class NaryGradTest : public ::testing::Test {
  protected:
   NaryGradTest() : scope_(Scope::NewRootScope().WithDevice("/cpu:0")) {}
