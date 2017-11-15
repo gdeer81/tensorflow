@@ -871,12 +871,13 @@ Status BatchMatMulGrad(const Scope& scope, const Operation& op,
 }
 REGISTER_GRADIENT_OP("BatchMatMul", BatchMatMulGrad);
 
-Status FloorGradHelper(const Scope& scope, const Operation& op,
+Status FloorGrad(const Scope& scope, const Operation& op,
                        const std::vector<Output>& grad_inputs,
                        std::vector<Output>* grad_outputs){
-  return FloorGrad(scope, grad_inputs);
+  grad_outputs->push_back(NoGradient());
+  return scope.status();
 }
-REGISTER_GRADIENT_OP("Floor", FloorGradHelper);
+REGISTER_GRADIENT_OP("Floor", FloorGrad);
 
 }  // anonymous namespace
 }  // namespace ops

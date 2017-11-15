@@ -66,7 +66,8 @@ class CWiseUnaryGradTest : public ::testing::Test {
     COMPLEX,
     ANGLE,
     LGAMMA,
-    ERF
+    ERF,
+    FLOOR
   };
 
   template <typename X_T, typename Y_T>
@@ -175,6 +176,9 @@ class CWiseUnaryGradTest : public ::testing::Test {
         break;
       case ERF:
         y = Erf(scope_, x);
+        break;
+      case FLOOR:
+        y = Floor(scope_, x);
         break;
     }
 
@@ -547,6 +551,11 @@ TEST_F(CWiseUnaryGradTest, Erf_Complex) {
   }
 }
 
+TEST_F(CWiseUnaryGradTest, Floor){
+  // auto x_fn = [this](const int i) { return RV({-1, 0, 1}); };
+ TestCWiseGrad<float, float>(FLOOR, 0);
+}
+
 class MathGradTest : public ::testing::Test {
  protected:
   MathGradTest() : root_(Scope::NewRootScope().WithDevice("/cpu:0")) {}
@@ -684,13 +693,6 @@ TEST_F(MathGradTest, BatchMatMulGrad_TransposeX_TransposeY) {
 
 TEST_F(MathGradTest, BatchMatMulComplexGrad_TransposeX_TransposeY) {
   TestMatMulGrad<complex64>(true, true, true);
-}
-
-TEST_F(MathGradTest, FloorGrad_Should_Do_nothing){
-  TensorShape x_shape({2, 3, 7, 5});
-  auto x = Placeholder(scope_, DT_FLOAT, Placeholder::Shape(x_shape));
-  auto y = FloorGrad(scope_, x_shape);
-  RunTest(x, x_shape, y, x_shape);
 }
 
 class NaryGradTest : public ::testing::Test {
